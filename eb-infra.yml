@@ -1,0 +1,14 @@
+---
+- hosts: localhost
+  connection: local
+  gather_facts: False
+
+  vars:
+    ebs_region: us-east-1
+    ebs_app_name: webmarks
+    ebs_private_key: worldbrain-dev.pem
+    ebs_service_role: aws-elasticbeanstalk-service-role
+
+
+  roles:
+    - eb-core

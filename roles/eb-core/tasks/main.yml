@@ -1,0 +1,26 @@
+- name: Create EBS Service Role in IAM
+  iam: 
+    iam_type: role
+    name: "{{ ebs_service_role }}"
+    state: present
+  tags:
+    - policy
+
+- name: Attach Service Role Policy to the IAM Role
+  iam_policy:
+    iam_type: role
+    iam_name: "{{ ebs_service_role }}"
+    policy_name: "{{ ebs_service_role }}_policy"
+    policy_json: "{{ lookup( 'template', 'service_policy.json.j2') }}"
+    state: present
+  tags:
+    - policy
+
+- name: Create EBS application
+  shell: eb init {{ ebs_app_name }} -r {{ ebs_region }} -p docker -k {{ ebs_private_key }}
+
+- name: Create EBS environments
+  shell: eb create {{ item.name }} -r {{ ebs_region }} -c {{ item.cname }} -t web -p docker --sample -k {{ ebs_private_key }} --tags app={{ ebs_app_name }} --service-role={{ ebs_service_role }}
+  with_items:
+    - { name: 'prod', cname: "{{ ebs_app_name }}-prod" }
+    - { name: 'staging', cname: "{{ ebs_app_name }}-staging" }
