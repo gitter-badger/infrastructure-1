@@ -14,6 +14,7 @@ This is necessary for Ansible to being able to connect EC2 servers behind Beanst
 
 ## Local initial setup 
 To be able to run the automation from your machine, you need to do this once: 
+
 1. `sudo pip install boto awsebcli`
 1. `./setup.sh`
 
